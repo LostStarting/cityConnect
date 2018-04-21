@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>省市联动</title>
+	<style type="text/css">
+	*{
+		margin:0;
+		padding:0;
+	}
+	</style>
+</head>
+<body>
+	<select name="" id="province">
+		<option>陕西</option>
+		<option>北京</option>
+	</select>省（市）
+	<select id="city"></select>市（区）
+
+	<script type="text/javascript" src="ajax.js"></script>
+	<script type="text/javascript">
+	function $(id) {
+		return document.getElementById(id);
+	}
+	let obj = null;
+	//获取省市数据
+	function getCitys() {
+		ajax("get", "myCityArea.json", "", true, function (str) {
+			obj = JSON.parse(str);
+			showProvince();
+			showCities();
+			console.log(obj);
+		});
+	}
+	//显示省
+	function showProvince() {
+		let htmlStr = "";
+		for(let key in obj) {
+			htmlStr += "<option value=" + key + ">" + key + "</option>";
+ 		}
+ 		$('province').innerHTML = htmlStr;
+	}
+	//显示市
+	function showCities() {
+		//根据所选择的省，找对应的市的数组
+		let citys = obj[$('province').value];
+		//显示数组到city下拉框里
+		let htmlStr = "";
+		for(let i in citys) {
+			htmlStr += "<option value=" + citys[i].编码 + ">" + citys[i].市名 + "</option>";
+		}
+		$('city').innerHTML = htmlStr;
+	}
+
+	window.onload = function () {
+		getCitys();
+		$('province').onchange = showCities;
+	}
+	</script>
+</body>
+</html>

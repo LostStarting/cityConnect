@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>省市联动</title>
+	<style type="text/css">
+	*{
+		margin:0;
+		padding:0;
+	}
+	</style>
+</head>
+<body>
+	<!-- <select name="" id="province">
+		<option>陕西</option>
+		<option>北京</option>
+	</select>省（市）
+	<select id="city"></select>市（区）
+	<select id="area"></select>区（县） -->
+	<div id="app"></div>
+	
+</body>
+</html>
+<script type="text/javascript" src="ajax.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.1.min.js"></script>
+<script>
+	$(function(){
+		
+		new AAA({
+			box:$("#app")
+		})
+	})
+	var AAA = function(obj){
+		this.box = obj.box;
+		this.jsons = null;
+		this.initUI();
+	}
+	AAA.prototype.initUI = function(){
+		that = this;
+		this.$select1 = $('<select></select>');
+		this.$select2 = $('<select></select>');
+		this.$select3 = $('<select></select>');
+		ajax("get", "myCityArea.json", "", true, function (str) {
+			that.jsons = JSON.parse(str);
+			
+			for(key in that.jsons){
+				let $option = $('<option>'+ key +'</option>');
+				that.$select1.append($option);
+			}
+			that.box.append(that.$select1);
+			that.box.append(that.$select2);
+			that.box.append(that.$select3);
+			that.change();
+		});
+	}
+	AAA.prototype.change = function(){
+		this.$select1.change(()=>{
+			this.$select2.empty();
+			this.$select3.empty();
+			console.log(this.jsons[this.$select1.val()]);
+			console.log(this.jsons[this.$select1.val()][0].区名);
+			for(let i in this.jsons[this.$select1.val()]){
+				let $option2 = $('<option>' + this.jsons[this.$select1.val()][i].市名 + '</option>');
+				this.$select2.append($option2);
+				console.log(this.jsons[this.$select1.val()][i].区名);
+			}
+			
+			
+			
+		});
+	}
+
+</script>
